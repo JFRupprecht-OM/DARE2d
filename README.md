@@ -59,7 +59,7 @@ The pipeline processes 2D+t image stacks (time series of 2D images) by analyzing
 The easiest way to run the complete pipeline is using the provided Jupyter notebook:
 
 ```bash
-jupyter notebook batch_inference_notebook.ipynb
+jupyter notebook main2d.ipynb
 ```
 
 This notebook provides a complete workflow:
