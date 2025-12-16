@@ -1,6 +1,4 @@
-# DARE2D: Deep Learning for 2D Cell Division Detection
-
-*DEep Learning Epithelial Tissue MEchanics for 2D Cell Division Detection* 
+# DARE2D: Division Axis Reconstruction for 2D Cell Divisions.
 
 This repository contains a complete Python implementation for detecting cell divisions and their attributes (position, angle, and length) in 2D time-lapse microscopy images using a multi-model consensus framework.
 
