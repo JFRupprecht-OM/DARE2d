@@ -1,4 +1,4 @@
-# DARE2D: Division Axis Reconstruction for 2D Cell Divisions.
+# DARE2D: Division Axis Reconstruction for 2D Tissues.
 
 This repository contains a complete Python implementation for detecting cell divisions and their attributes (position, angle, and length) in 2D time-lapse microscopy images using a multi-model consensus framework.
 
