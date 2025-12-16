@@ -1,4 +1,14 @@
-# DARE2D: Division Axis Reconstruction for 2D Tissues.
+<div align="center">
+
+# dare2d on TensorFlow
+
+<a href="https://www.tensorflow.org/"><img alt="TensorFlow" src="https://img.shields.io/badge/TensorFlow-FF6F00?logo=tensorflow&logoColor=white"></a> <a href="https://keras.io/"><img alt="Keras" src="https://img.shields.io/badge/Keras-D00000?logo=keras&logoColor=white"></a> <a href="https://hydra.cc/"><img alt="Config: Hydra" src="https://img.shields.io/badge/Config-Hydra-89b8cd"></a> <a href="https://scikit-learn.org/"><img alt="scikit-learn" src="https://img.shields.io/badge/scikit--learn-F7931E?logo=scikit-learn&logoColor=white"></a><br>
+
+</div>
+
+## Description
+
+**D**ivision **A**xis **RE**cognition in **2D** tissues
 
 This repository contains a complete Python implementation for detecting cell divisions and their attributes (position, angle, and length) in 2D time-lapse microscopy images using a multi-model consensus framework.
 
