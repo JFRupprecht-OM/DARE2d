@@ -1,168 +1,197 @@
 <div align="center">
 
-# dare2d on TensorFlow
+# DARE2D: Division Axis Recognition in 2D
 
-<a href="https://www.tensorflow.org/"><img alt="TensorFlow" src="https://img.shields.io/badge/TensorFlow-FF6F00?logo=tensorflow&logoColor=white"></a> <a href="https://keras.io/"><img alt="Keras" src="https://img.shields.io/badge/Keras-D00000?logo=keras&logoColor=white"></a> <a href="https://hydra.cc/"><img alt="Config: Hydra" src="https://img.shields.io/badge/Config-Hydra-89b8cd"></a> <a href="https://scikit-learn.org/"><img alt="scikit-learn" src="https://img.shields.io/badge/scikit--learn-F7931E?logo=scikit-learn&logoColor=white"></a><br>
+<a href="https://www.tensorflow.org/"><img alt="TensorFlow" src="https://img.shields.io/badge/TensorFlow-FF6F00?logo=tensorflow&logoColor=white"></a> <a href="https://keras.io/"><img alt="Keras" src="https://img.shields.io/badge/Keras-D00000?logo=keras&logoColor=white"></a> <a href="https://hydra.cc/"><img alt="Config: Hydra" src="https://img.shields.io/badge/Config-Hydra-89b8cd"></a>
 
 </div>
 
-## Description
-
-**D**ivision **A**xis **RE**cognition in **2D** tissues
-
-This repository contains a complete Python implementation for detecting cell divisions and their attributes (position, angle, and length) in 2D time-lapse microscopy images using a multi-model consensus framework.
+---
 
 ## Overview
 
-The DARE2D framework implements a robust two-stage pipeline for cell division detection:
+**DARE2D** is a deep learning framework for detecting cell divisions in 2D time-lapse microscopy images and estimating their key attributes. This Python implementation leverages TensorFlow/Keras and Hydra for configuration management to provide a flexible, reproducible pipeline for:
 
-1. **Multi-Model Inference**: Semantic segmentation to detect division centers using multiple trained models
-2. **Consensus Generation**: Spatial clustering and temporal deduplication to create reliable consensus detections
-3. **Quality Assessment**: Statistical analysis and uncertainty quantification of detection results
+1. **Segmentation**: Detect the center (barycenter) of cell divisions
+2. **Regression**: Estimate division attributes such as:
+   - Orientation angle
+   - Division axis length
+   - Other morphological parameters
 
-The pipeline processes 2D+t image stacks (time series of 2D images) by analyzing triplets of consecutive frames to capture temporal context for accurate division detection.
+The framework supports **inference on new data** using pre-trained model ensembles with a multi-model consensus approach for robust detection.
 
-## Key Features
+---
 
-- **Multi-Model Consensus**: Combines predictions from multiple trained models for improved robustness
-- **Uncertainty Quantification**: Provides confidence scores and uncertainty measures for each detection
-- **Batch Processing**: Automated pipeline for processing multiple images with comprehensive result organization
-- **Quality Metrics**: Statistical analysis and visualization of detection reliability
-- **Jupyter Notebook Interface**: User-friendly notebook for complete pipeline execution
+## Quick Start
+
+The easiest way to get started is with the **included Jupyter notebook** and pre-trained model checkpoints:
+
+```bash
+# 1. Clone the repository
+git clone <repository-url>
+cd DARE2d_main
+
+# 2. Create and activate conda environment
+conda create -n dare2d python=3.9
+conda activate dare2d
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Install DARE2D in development mode
+pip install -e .
+
+# 5. Run the prediction notebook
+# Open and run: main2d.ipynb
+```
+
+> **Note**: Always activate the `dare2d` environment before running any scripts or notebooks.
+
+---
 
 ## Installation
 
 ### Prerequisites
-- Python 3.8+
-- Conda (recommended for environment management)
+- Python 3.9
+- TensorFlow 2.x (GPU recommended but CPU supported)
+- Conda (recommended)
 
-### Setup Steps
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd dare2d
-   ```
-
-2. **Create conda environment**
-   ```bash
-   conda create --name dare2d python=3.9
-   conda activate dare2d
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Install the package**
-   ```bash
-   pip install -e .
-   ```
-
-## Quick Start
-
-### Batch Inference Pipeline
-
-The easiest way to run the complete pipeline is using the provided Jupyter notebook:
+### Step-by-Step Installation
 
 ```bash
-jupyter notebook main2d.ipynb
+# 1. Clone the repository
+git clone <repository-url>
+cd DARE2d_main
+
+# 2. Initialize your shell for conda (optional but recommended)
+conda init powershell  # Windows PowerShell
+# OR
+conda init bash        # Linux/macOS
+
+# 3. Create a fresh conda environment
+conda create -n dare2d python=3.9
+conda activate dare2d
 ```
 
-This notebook provides a complete workflow:
-1. Setup and path configuration
-2. Multi-model inference on multiple images
-3. Consensus generation and postprocessing
-4. Quality analysis and visualization
-
-### Command Line Inference
-
-For single image processing, use the inference script:
+#### Install Dependencies
 
 ```bash
-python scripts/inference/multistage_detection2d.py \
-    --regression=<path-to-regression-weights> \
-    --segmentation=<path-to-segmentation-weights> \
-    --img=<path-to-tiff-stack> \
-    --output=<output-directory>
+# Install TensorFlow and other dependencies
+pip install -r requirements.txt
+
+# Install DARE2D in development mode
+pip install -e .
 ```
 
-### Batch Processing
+---
 
-For processing multiple images with multiple models:
-
-```bash
-python scripts/all_model_inference.py
-```
-
-This script automatically discovers images and runs inference with 8 different model pairs, followed by postprocessing for consensus results.
-
-## Pipeline Details
-
-### Stage 1: Multi-Model Inference
-
-The pipeline processes each input image with multiple trained model pairs (segmentation + regression). Each model processes 3-frame windows [t-1, t, t+1] to capture temporal context.
-
-**Segmentation Model**: Identifies potential division centers using U-Net architecture
-**Regression Model**: Predicts division angle and length for each detected center
-
-### Stage 2: Consensus Generation
-
-Raw detections from multiple models are aggregated using:
-- **Spatial Clustering**: HDBSCAN/DBSCAN to group nearby detections
-- **Temporal Deduplication**: Removes duplicate detections across consecutive frames
-- **Consensus Calculation**: Median positions, chosen angles, uncertainty statistics
-
-### Stage 3: Quality Assessment
-
-Postprocessing generates:
-- Distribution plots for detection metrics
-- Quality scores based on model agreement
-- Uncertainty visualizations
-- Comprehensive statistics CSV
-
-## Output Structure
+## Project Structure
 
 ```
-project_root/
-├── output/                          # Raw inference results
-│   ├── {image_name}_1/{image_name}/
-│   │   ├── division_position1.npy   # Raw detections per frame
-│   │   └── {image_name}_result.tiff # Inference visualization
-│   └── {image_name}_2/...           # Results for each model
-├── postprocessed_results/           # Consensus results
-│   └── {image_name}/
-│       ├── chosen_divisions/        # Final consensus detections
-│       ├── post_processed_{image_name}.tiff  # Consensus visualization
-│       └── post_processed_{image_name}_summary.csv  # Statistics
-└── analysis_plots/                  # Quality analysis
-    └── {image_name}/
-        ├── distribution_plots.png
-        ├── quality_scores.png
-        └── metrics.csv
+dare2d/                          # Main package
+├── __init__.py
+├── io.py                        # Input/output utilities
+├── typing.py                    # Type definitions
+│
+├── callbacks/                   # Training callbacks
+│   ├── display_callback.py
+│   ├── regression_callback.py
+│   ├── savelast_callback.py
+│   └── tap2d_callback.py
+│
+├── datamodule/                  # Data loading and preprocessing
+│   ├── datamodule.py           # Base datamodule
+│   ├── regression2d.py         # Regression data
+│   ├── segmentation2d.py       # Segmentation data
+│   ├── tap2d.py                # Multi-task data
+│   ├── augmentation/           # Data augmentation
+│   └── generator/              # Data generators
+│
+├── evaluation/                  # Evaluation metrics and utilities
+│
+├── losses/                      # Loss functions
+│
+├── model/                       # Neural network architectures
+│
+├── prediction/                  # Inference utilities
+│
+└── trainer/                     # Training utilities
+
+config/                          # Hydra configuration files
+├── train.yaml                  # Training config template
+├── datamodule/                 # Data config
+├── model/                      # Model architectures config
+│   ├── losses/                 # Loss functions config
+│   ├── metrics/                # Metrics config
+│   └── optimizer/              # Optimizer config
+├── trainer/                    # Trainer config
+├── callbacks/                  # Callback config
+├── experiment/                 # Experiment presets
+└── hparams_search/             # Hyperparameter search configs
+
+scripts/                        # Utility scripts
+├── all_model_inference.py     # Batch inference runner
+├── inference/                  # Inference scripts
+│   └── multistage_detection2d.py
+├── postprocessing/             # Result postprocessing
+├── evaluation/                 # Evaluation scripts
+├── train/                      # Training scripts
+└── tools/                      # Utility tools
+
+notebooks/                      # Jupyter notebooks
+├── main2d.ipynb               # Main prediction notebook (START HERE!)
+├── data_analysis.ipynb        # Data exploration
+└── train_data_display.ipynb   # Training data visualization
+
+input/                          # Input data directory (you'll populate this)
+                                # Place your .tif image stacks here
+
+output/                         # Inference outputs (auto-generated)
+├── {image_name}_1/            # Results from model set 1
+├── {image_name}_2/            # Results from model set 2
+└── ...                        # Results from model sets 3-8
+
+regression_checkpoints/         # Regression model weights
+├── checkpoints_set_1_all_but_target/
+│   └── best.h5
+├── checkpoints_set_2_all_but_target/
+└── ...                        # Sets 3-8
+
+segmentation_checkpoints/       # Segmentation model weights
+├── checkpoints_set_1_all_but_target/
+│   └── best.h5
+├── checkpoints_set_2_all_but_target/
+└── ...                        # Sets 3-8
+
+postprocessed_results/          # Consensus outputs (auto-generated)
+└── {image_name}/
+    ├── chosen_divisions/       # Final consensus detections
+    ├── post_processed_{image_name}.tiff
+    └── post_processed_{image_name}_summary.csv
+
+analysis_plots/                 # Quality analysis (auto-generated)
+└── {image_name}/
+    ├── distribution_plots.png
+    └── metrics.csv
+
+requirements.txt               # Python dependencies
+setup.py                       # Package setup configuration
+README.md                      # This file
+README.backup.md              # Original README (for reference)
 ```
 
-## Training
+---
 
-### Available Experiments
+## Model Checkpoints
 
-Train individual components using Hydra configuration:
+DARE2D uses an **ensemble of 8 model sets** for robust predictions:
 
-```bash
-# Segmentation model for division center detection
-python scripts/train.py experiment=segmentation2d
+- `regression_checkpoints/checkpoints_set_1_all_but_target/` through `checkpoints_set_8_all_but_target/`
+- `segmentation_checkpoints/checkpoints_set_1_all_but_target/` through `checkpoints_set_8_all_but_target/`
 
-# Regression model for angle/length prediction
-python scripts/train.py experiment=regression2d
+Each set contains a `best.h5` file with the trained model weights. The ensemble approach improves detection reliability through multi-model consensus.
 
-# TAP (Task Affinity Prediction) model
-python scripts/train.py experiment=tap2d
-```
-
-### Configuration
-
-Experiment configurations are located in `config/experiment/`. Modify parameters in the corresponding YAML files to customize training.
+---
 
 ## Data Format
 
@@ -170,84 +199,228 @@ Experiment configurations are located in `config/experiment/`. Modify parameters
 - **Format**: TIFF stacks (.tif)
 - **Dimensions**: (T, Y, X) where T is time, Y/X are spatial dimensions
 - **Type**: 8-bit or 16-bit grayscale images
+- **Location**: Place input files in the `input/` directory
 
-### Ground Truth (for training)
-- Division centers: (x, y) coordinates
-- Division attributes: angle (degrees/radians), length (pixels)
+### Output Structure
 
-## HPC Usage (Jean Zay)
+After running inference, results are organized as:
 
-### Build Singularity Image
+```
+output/
+└── {image_name}_1/             # Results from model set 1
+    └── {image_name}/
+        ├── division_position1.npy   # Raw detections per frame
+        └── {image_name}_result.tiff # Visualization
+
+postprocessed_results/
+└── {image_name}/
+    ├── chosen_divisions/        # Final consensus detections
+    ├── post_processed_{image_name}.tiff
+    └── post_processed_{image_name}_summary.csv  # Statistics
+
+analysis_plots/
+└── {image_name}/
+    ├── distribution_plots.png
+    └── metrics.csv
+```
+
+---
+
+## Inference (Prediction)
+
+### Quickest Path: Use the Notebook
+
+The easiest way to run inference is the **Jupyter notebook**:
+
 ```bash
-sudo singularity build --nv dare2d.sif singularity.def
+conda activate dare2d
+jupyter notebook main2d.ipynb
 ```
 
-### Run on Jean Zay
-```bash
-# Reserve GPU node
-srun --pty --ntasks=1 --gres=gpu:1 --hint=nomultithread bash
+This notebook:
+- Guides you through path setup
+- Runs inference with all 8 model sets
+- Generates consensus detections
+- Produces visualization outputs
+- Performs quality analysis
 
-# Load singularity
-module load singularity
+### Batch Inference (Command-Line)
 
-# Run container with data binding
-singularity shell --nv --bind $WORK/dare2d:/dare2d --bind $ALL_CCFRWORK/data:/dare2d/data $SINGULARITY_ALLOWED_DIR/dare2d.sif
+For processing multiple images programmatically:
 
-# Install package and run
-cd /dare2d && pip install -e .
-python scripts/train.py experiment=segmentation2d
+**Script**: `scripts/all_model_inference.py`
+
+#### Setup
+
+1. Edit the script and set `BASE_DIR` to your project root:
+   ```python
+   BASE_DIR = r"C:\Users\YourName\Documents\DARE2d_main - Copy"
+   ```
+
+2. Ensure model checkpoints exist in:
+   - `regression_checkpoints/checkpoints_set_1_all_but_target/` through `checkpoints_set_8_all_but_target/`
+   - `segmentation_checkpoints/checkpoints_set_1_all_but_target/` through `checkpoints_set_8_all_but_target/`
+
+3. Place input `.tif` files in `input/`
+
+#### Run Batch Inference
+
+```powershell
+conda activate dare2d
+python scripts/all_model_inference.py
 ```
 
-`scp dare2d.sif <user>@jean-zay.idris.fr:<path to $ALL_CCFRWORK>`
+The script will:
+- Automatically discover `.tif` files in `input/`
+- Process each image with all 8 model sets
+- Save results under `output/{image_name}_{n}/`
+- Generate comprehensive logs
 
-After that you can login on JeanZay and register the image
-`idrcontmgr cp dare2d.sif`
-You can list the registered images with
-`idrcontmgr ls`
-And remove and old one with
-`idrcontmgr rm dare2d.sif`
+### Single Image Inference
 
-### Run the container on JZ
+For processing a single image with a specific model set:
 
-**First do a reservation** no time specified = 10 minutes
-`srun --pty --ntasks=1 --gres=gpu:1 --hint=nomultithread bash`
-
-Load singularity
-`module load singularity`
-
-With a registered singularity image
-
-`singularity shell --nv $SINGULARITY_ALLOWED_DIR/dare2d.sif`
-
-However you won't have acces to the data nor the source code.
-Assuming the source code is located in `$WORK/dare2d` and the data in `$ALL_CCFRWORK/data` you can bind these folders to the singularity image as follow:
-`singularity shell --nv --bind $WORK/dare2d:/dare2d --bind $ALL_CCFRWORK/data:/dare2d/data $SINGULARITY_ALLOWED_DIR/dare2d.sif`
-
-Once you have the shell you can check that everything is in order in `/dare2d`
-
-Install the dare2d package locally: `cd /dare2d && pip install -e .`
-
-You can now run your experiment
-
-### Troubleshoot
-
-If you have issue with /tmp `no space left on device` you can set `SINGULARITY_TMPDIR` and/or `SINGULARITY_CACHEDIR` to a different folder:
-
+```powershell
+conda activate dare2d
+python -m scripts.inference.multistage_detection2d \
+  --regression regression_checkpoints/checkpoints_set_1_all_but_target/best.h5 \
+  --segmentation segmentation_checkpoints/checkpoints_set_1_all_but_target/best.h5 \
+  --img input/my_stack.tif \
+  --output output/my_stack_1
 ```
-sudo SINGULARITY_TMPDIR=<path/tmp> singularity build --nv dare2d.sif singularity.def
+
+**Parameters**:
+- `--regression`: Path to regression model checkpoint
+- `--segmentation`: Path to segmentation model checkpoint
+- `--img`: Path to input TIFF stack
+- `--output`: Output directory for results
+
+---
+
+## Postprocessing & Consensus
+
+After inference, aggregate results from multiple models:
+
+### Consensus Generation
+
+The postprocessing pipeline:
+1. **Spatial Clustering**: Groups nearby detections using HDBSCAN/DBSCAN
+2. **Temporal Deduplication**: Removes duplicate detections across frames
+3. **Consensus Calculation**: Computes median positions, angles, and uncertainty statistics
+
+### Parameters
+
+Key postprocessing parameters (configurable in notebook or scripts):
+- `eps = 10`: Spatial clustering distance threshold (pixels)
+- `min_models = 6`: Minimum number of models required for consensus
+- `num_models = 8`: Total number of models in ensemble
+- `angle_mode = "auto"`: Angle selection strategy
+
+### Running Postprocessing
+
+Postprocessing is integrated in the notebook workflow. For standalone use:
+
+```powershell
+python scripts/postprocessing/main.py \
+  --output_root output \
+  --image_name my_image \
+  --image_stack input/my_image.tif \
+  --save_dir postprocessed_results/my_image \
+  --eps 10 \
+  --min_models 6 \
+  --num_models 8
 ```
+
+---
+
+## Quality Analysis
+
+Generate distribution plots and quality metrics:
+
+```powershell
+python scripts/postprocessing/plots.py \
+  --summary postprocessed_results/my_image/post_processed_my_image_summary.csv \
+  --tiff postprocessed_results/my_image/post_processed_my_image.tiff \
+  --plots_dir analysis_plots/my_image
+```
+
+Outputs include:
+- Distribution plots for detection metrics
+- Quality scores based on model agreement
+- Uncertainty visualizations
+- Comprehensive statistics CSV
+
+---
 
 ## Troubleshooting
 
 ### Common Issues
 
-**Memory Errors**: Reduce batch sizes or process fewer images simultaneously
-**Missing Dependencies**: Ensure all packages in `requirements.txt` are installed
-**CUDA Errors**: Check GPU memory and driver compatibility
-**Singularity /tmp Issues**: Set `SINGULARITY_TMPDIR` to a different location
+**Missing Checkpoints**
+- Verify that all 8 model sets exist in both `regression_checkpoints/` and `segmentation_checkpoints/`
+- Check that each set contains a `best.h5` file
+
+**Import Errors**
+- Ensure `conda activate dare2d` is active
+- Verify all dependencies: `pip install -r requirements.txt`
+
+**Path Errors**
+- Update `BASE_DIR` in `scripts/all_model_inference.py` to match your project location
+- Use absolute paths when possible
+
+**Memory Errors**
+- Reduce batch sizes in configuration files
+- Process fewer images simultaneously
+- Consider using CPU-only mode for large images
+
+**No Input Images Found**
+- Verify `.tif` files are in the `input/` directory
+- Check file extensions (must be `.tif`, not `.tiff`)
 
 ### Performance Tips
 
-- Use SSD storage for faster I/O operations
+- Use GPU for faster inference (TensorFlow GPU support)
 - Process images in smaller batches for memory management
-- Monitor GPU utilization during training/inference
+- Use SSD storage for faster I/O operations
+
+---
+
+## Citation
+
+If you use DARE2D in your research, please cite:
+
+```
+[Citation information to be added]
+```
+
+---
+
+## License
+
+[License information to be added]
+
+---
+
+## Contributing
+
+Contributions are welcome! Please follow these guidelines:
+- Fork the repository
+- Create a feature branch
+- Submit a pull request with clear description
+
+---
+
+## Related Projects
+
+- **DARE3D**: 3D version of this framework for volumetric data
+  - GitHub: [DARE3D Repository]
+  - Uses PyTorch Lightning instead of TensorFlow
+
+---
+
+## Support
+
+For questions, issues, or feature requests:
+- Open an issue on GitHub
+- Contact: [Contact information to be added]
+
