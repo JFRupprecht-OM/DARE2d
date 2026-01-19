@@ -29,7 +29,7 @@ The easiest way to get started is with the **included Jupyter notebook** and pre
 ```bash
 # 1. Clone the repository
 git clone <repository-url>
-cd DARE2d_main
+cd DARE2d
 
 # 2. Create and activate conda environment
 conda create -n dare2d python=3.9
