@@ -75,7 +75,7 @@ def load_all_model_detections(output_root, image_name, num_models=8):
     Returns dict: frame_idx -> list of (model_id, x, y, raw_angle, length)
     """
     all_dets = defaultdict(list)
-    nam = Path(image_name).nam
+    nam = Path(image_name).name
 
     for m in range(1, num_models + 1):
         model_root = os.path.join(output_root, f"{nam}_{m}")
@@ -527,7 +527,7 @@ def process_all_frames(all_dets, image_stack, args):
 
     print(f"[INFO] Processing {n_frames} frames (will produce exactly {n_frames} output frames).")
 
-    nam = Path(args.image_name).nam
+    nam = Path(args.image_name).name
 
     chosen_npy_dir = os.path.join(args.save_dir, "chosen_divisions")
     os.makedirs(chosen_npy_dir, exist_ok=True)
