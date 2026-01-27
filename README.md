@@ -169,11 +169,6 @@ postprocessed_results/          # Consensus outputs (auto-generated)
     ├── post_processed_{image_name}.tiff
     └── post_processed_{image_name}_summary.csv
 
-analysis_plots/                 # Quality analysis (auto-generated)
-└── {image_name}/
-    ├── distribution_plots.png
-    └── metrics.csv
-
 requirements.txt               # Python dependencies
 setup.py                       # Package setup configuration
 README.md                      # This file
@@ -217,11 +212,6 @@ postprocessed_results/
     ├── chosen_divisions/        # Final consensus detections
     ├── post_processed_{image_name}.tiff
     └── post_processed_{image_name}_summary.csv  # Statistics
-
-analysis_plots/
-└── {image_name}/
-    ├── distribution_plots.png
-    └── metrics.csv
 ```
 
 ---
@@ -242,7 +232,6 @@ This notebook:
 - Runs inference with all 8 model sets
 - Generates consensus detections
 - Produces visualization outputs
-- Performs quality analysis
 
 ### Batch Inference (Command-Line)
 
@@ -330,25 +319,6 @@ python scripts/postprocessing/main.py \
   --min_models 6 \
   --num_models 8
 ```
-
----
-
-## Quality Analysis
-
-Generate distribution plots and quality metrics:
-
-```powershell
-python scripts/postprocessing/plots.py \
-  --summary postprocessed_results/my_image/post_processed_my_image_summary.csv \
-  --tiff postprocessed_results/my_image/post_processed_my_image.tiff \
-  --plots_dir analysis_plots/my_image
-```
-
-Outputs include:
-- Distribution plots for detection metrics
-- Quality scores based on model agreement
-- Uncertainty visualizations
-- Comprehensive statistics CSV
 
 ---
 
