@@ -295,7 +295,7 @@ After inference, results from multiple models are aggregated to generate consens
 
 The postprocessing pipeline:
 1. **Spatial Clustering**: Groups detections based on spatial proximity, taking into account the size of each cell. This ensures that clustering reflects the actual cell dimensions, so detections within the same cell area are grouped together.
-2. **Temporal Deduplication**: Within each spatial cluster, duplicate detections across frames are removed to ensure that a single cell is not detected multiple times in the same area.
+2. **Temporal De-duplication**: Within each spatial cluster, duplicate detections across frames are removed to ensure that a single cell is not detected multiple times in the same area.
 3. **Consensus Calculation**: Computes median positions, angles, and uncertainty statistics for each cell cluster.
 
 ### Parameters
