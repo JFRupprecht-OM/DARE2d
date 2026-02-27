@@ -243,7 +243,7 @@ For processing multiple images programmatically:
 
 1. Edit the script and set `BASE_DIR` to your project root:
    ```python
-   BASE_DIR = r"C:\Users\YourName\Documents\DARE2d_main - Copy"
+   BASE_DIR = r"C:\Users\YourName\Documents\DARE2d"
    ```
 
 2. Ensure model checkpoints exist in:
@@ -275,7 +275,7 @@ python -m scripts.inference.multistage_detection2d \
   --regression regression_checkpoints/checkpoints_set_1_all_but_target/best.h5 \
   --segmentation segmentation_checkpoints/checkpoints_set_1_all_but_target/best.h5 \
   --img input/my_stack.tif \
-  --output output/my_stack_1
+  --output output/my_stack
 ```
 
 **Parameters**:
@@ -288,19 +288,20 @@ python -m scripts.inference.multistage_detection2d \
 
 ## Postprocessing & Consensus
 
-After inference, aggregate results from multiple models:
+
+After inference, results from multiple models are aggregated to generate consensus detections:
 
 ### Consensus Generation
 
 The postprocessing pipeline:
-1. **Spatial Clustering**: Groups nearby detections using HDBSCAN/DBSCAN
-2. **Temporal Deduplication**: Removes duplicate detections across frames
-3. **Consensus Calculation**: Computes median positions, angles, and uncertainty statistics
+1. **Spatial Clustering**: Groups detections based on spatial proximity, taking into account the size of each cell. This ensures that clustering reflects the actual cell dimensions, so detections within the same cell area are grouped together.
+2. **Temporal Deduplication**: Within each spatial cluster, duplicate detections across frames are removed to ensure that a single cell is not detected multiple times in the same area.
+3. **Consensus Calculation**: Computes median positions, angles, and uncertainty statistics for each cell cluster.
 
 ### Parameters
 
 Key postprocessing parameters (configurable in notebook or scripts):
-- `eps = 10`: Spatial clustering distance threshold (pixels)
+- `eps = 10`: Spatial clustering distance threshold (pixels), typically set based on cell size
 - `min_models = 6`: Minimum number of models required for consensus
 - `num_models = 8`: Total number of models in ensemble
 - `angle_mode = "auto"`: Angle selection strategy
