@@ -323,6 +323,14 @@ python scripts/postprocessing/main.py \
 
 ---
 
+## License & Attribution
+
+This work was granted access to the HPC resources of IDRIS under the allocation AD010314339 made by GENCI.
+
+Authors: Romain Karpinski, Marc Karnat, Alice Gros, Qazi Saaheelur Rahaman, Jules Vanaret, Mehdi Saadaoui, Sham Tlili, and Jean-Francois Rupprecht
+
+---
+
 ## Troubleshooting
 
 ### Common Issues
@@ -356,42 +364,12 @@ python scripts/postprocessing/main.py \
 
 ---
 
-## Citation
-
-If you use DARE2D in your research, please cite:
-
-```
-[Citation information to be added]
-```
-
----
-
-## License
-
-[License information to be added]
-
----
-
-## Contributing
-
-Contributions are welcome! Please follow these guidelines:
-- Fork the repository
-- Create a feature branch
-- Submit a pull request with clear description
-
----
-
 ## Related Projects
 
 - **DARE3D**: 3D version of this framework for volumetric data
-  - GitHub: [DARE3D Repository]
-  - Uses PyTorch Lightning instead of TensorFlow
+  - GitHub: https://github.com/JFRupprecht-OM/DARE3d/tree/main
 
 ---
 
-## Support
-
-For questions, issues, or feature requests:
-- Open an issue on GitHub
-- Contact: [Contact information to be added]
+**Questions?** Check the demo notebook or open an issue on the repository.
 
