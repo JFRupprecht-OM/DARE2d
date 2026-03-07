@@ -36,6 +36,7 @@ conda create -n dare2d python=3.9
 conda activate dare2d
 
 # 3. Install dependencies
+pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 
 # 4. Install DARE2D in development mode
