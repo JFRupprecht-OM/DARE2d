@@ -24,3 +24,5 @@ tifffile
 tensorflow-probability
 tensorflow-graphics
 augmend
+ipykernel
+greenlet==2.0.2
