@@ -78,6 +78,7 @@ conda activate dare2d
 
 ```bash
 # Install TensorFlow and other dependencies
+pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 
 # Install DARE2D in development mode
