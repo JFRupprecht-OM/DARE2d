@@ -1,6 +1,6 @@
 <div align="center">
 
-# DARE2D: Division Axis Recognition in 2D
+# DARE2d: Division Axis and Region Estimation in 2d time-lapse images
 
 <a href="https://www.tensorflow.org/"><img alt="TensorFlow" src="https://img.shields.io/badge/TensorFlow-FF6F00?logo=tensorflow&logoColor=white"></a> <a href="https://keras.io/"><img alt="Keras" src="https://img.shields.io/badge/Keras-D00000?logo=keras&logoColor=white"></a> <a href="https://hydra.cc/"><img alt="Config: Hydra" src="https://img.shields.io/badge/Config-Hydra-89b8cd"></a>
 
