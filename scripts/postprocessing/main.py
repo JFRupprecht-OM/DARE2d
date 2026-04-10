@@ -124,7 +124,7 @@ def detect_angle_units_and_convert(all_dets, mode="auto"):
     Detect whether input angles are radians or degrees (auto) and convert to DEGREES.
     Additionally convert model math-angles into the IMAGE drawing convention:
       image_angle_deg = 90.0 - model_angle_deg
-    This stores signed angles in degrees in range (-180, 180].
+    This stores signed angles in degrees in range (-90, 90].
     Modifies all_dets in-place.
     """
     samples = []
