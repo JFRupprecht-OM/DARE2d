@@ -28,7 +28,7 @@ The easiest way to get started is with the **included Jupyter notebook** and pre
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/qazi05/DARE2d
+git clone https://github.com/JFRupprecht-OM/DARE2d
 cd DARE2d
 
 # 2. Create and activate conda environment
